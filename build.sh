@@ -25,6 +25,8 @@ command -v "${TOOLCHAIN}gcc"
 [ "$?" != "0" ] && { echo "${TOOLCHAIN}gcc not found!"; exit 0; }
 export CROSS_COMPILE="$TOOLCHAIN"
 
+cp -r $UBOOT_DIR/configs $ATF_DIR/configs
+
 ATF_CFG="${SOC}_${BOARD}_defconfig"
 UBOOT_CFG="${SOC}_${BOARD}_defconfig"
 for file in "$ATF_DIR/configs/$ATF_CFG" "$UBOOT_DIR/configs/$UBOOT_CFG"; do

@@ -90,9 +90,9 @@ jobs:
       run: |
         SOC=${{ github.event.inputs.Tempoary_SOC }} BOARD=${{ github.event.inputs.Tempoary_BOARD }} MULTI_LAYOUT=${{ github.event.inputs.Tempoary_MULTI_LAYOUT }} ./build.sh
 
-    - name: Upload Firmware to Release
+    - name: Upload U_BOOT to Release
       uses: svenstaro/upload-release-action@v2
-      if: env.UPLOAD_RELEASES == 'true' && !cancelled()
+      if: ${{ github.event.inputs.UPLOAD_RELEASES }} == 'true' && !cancelled()
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: output/*
@@ -101,12 +101,12 @@ jobs:
         overwrite: true
         
     - name: Refresh API (1/2)
-      if: env.UPLOAD_RELEASES == 'true' && !cancelled()
+      if: ${{ github.event.inputs.UPLOAD_RELEASES }} == 'true' && !cancelled()
       run: |
         wget https://api.github.com/repos/${{github.repository}}/releases/tags/AutoUpdate-U-BOOT -O API
         
     - name: Refresh API (2/2)
-      if: env.UPLOAD_RELEASES == 'true' && !cancelled()
+      if: ${{ github.event.inputs.UPLOAD_RELEASES }} == 'true' && !cancelled()
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -117,7 +117,7 @@ jobs:
 
     - name: Delete old Workflow Runs
       continue-on-error: true
-      if: env.DELETE_OLD_WORKFLOW == 'true' && !cancelled()
+      if: ${{ github.event.inputs.DELETE_OLD_WORKFLOW }} == 'true' && !cancelled()
       uses: Mattraks/delete-workflow-runs@v2
       with:
           token: ${{ secrets.GITHUB_TOKEN }}
